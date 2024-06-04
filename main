@@ -1,0 +1,98 @@
+from index import courses
+
+
+def check_course_name(course_name):
+    return course_name in courses
+
+
+def check_user_id(course_name, users_id):
+    return users_id in courses.get(course_name, {})
+
+
+def get_user_courses(users_id):
+    user_courses = []
+    for course_name, users in courses.items():
+        if users_id in users:
+            user_courses.append(course_name)
+    return user_courses
+
+
+def add_course():
+    cuorse_name = input('Enter new course name: ')
+    if check_course_name(cuorse_name):
+        print("This course already exists")
+        return add_course()
+    else:
+        courses[cuorse_name] = {}
+        print(f"Adding course {cuorse_name} to courses list...")
+
+
+def add_user_to_course(course_name, users_id, user_name):
+    if course_name not in courses:
+        courses[course_name] = {}
+    courses[course_name][users_id] = user_name
+
+
+def register_for_course():
+    course_name = input("Enter course name: ")
+    users_id = input("Enter your ID: +998 ")
+
+    if not check_course_name(course_name):
+        print("This course does not exist")
+        return register_for_course()
+    else:
+        if check_user_id(course_name, users_id):
+            print("This user ID already exists")
+            return register_for_course()
+
+        user_name = input("Enter your Full name: ")
+        add_user_to_course(course_name, users_id, user_name)
+        print(f"Adding {users_id} to {course_name} course list")
+        return show_global_menu()
+
+
+def show_user_courses():
+    users_id = input("Enter your ID: +998 ")
+    courses = get_user_courses(users_id)
+    if courses:
+        print("You are registered in the following courses:")
+        for course in courses:
+            print(f"List of courses {course}")
+    else:
+        print("You are not registered in any courses.")
+    return show_global_menu()
+
+
+def show_all_courses():
+    for course, user in courses.items():
+        print(f"{course}: {user}")
+
+
+def show_global_menu():
+    text = """
+    Menu: Select the desired section
+    1. Add course
+    2. Show all courses
+    3. Register for a course
+    4. View the list of registered courses
+    5. Exit
+    """
+    print(text)
+    user_input = int(input("Choose from menu: "))
+    if user_input == 1:
+        add_course()
+    elif user_input == 2:
+        show_all_courses()
+    elif user_input == 3:
+        register_for_course()
+    elif user_input == 4:
+        show_user_courses()
+    elif user_input == 5:
+        print("Good bye!")
+    else:
+        print("No such information is available!!! Please enter your information again to continue")
+    return show_global_menu()
+
+
+if __name__ == "__main__":
+    show_global_menu()
